@@ -1,0 +1,4 @@
+# material-fonte de terceiros / extração não autenticada — mantido só local
+doc/
+node_modules/
+.DS_Store
