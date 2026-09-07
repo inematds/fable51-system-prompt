@@ -1,5 +1,9 @@
 # Fable 5.1 — prompt de sistema (projeto de referência)
 
+## 📖 Guia de uso
+
+Guia completo (landing + passo a passo): **https://inematds.github.io/fable51-system-prompt/guia/**
+
 Material de referência sobre o **prompt de sistema do Claude Fable 5.1**: o que a Anthropic publica, o que aparece na extração pública do runtime do Claude.ai, o que mudou em relação ao Fable 5, e as fichas práticas derivadas disso. É o **projeto**; o **curso** que ensina esse conteúdo vive separado (ver o fim).
 
 ## Duas fontes, dois pesos
@@ -24,6 +28,7 @@ fable51-system-prompt/
     02-escrever-para-o-fable.md    tirar o andaime, dizer o quando, formato > fórmula, esforço, esqueleto set/2026
     03-custo-e-esforco.md          tabela de preços, níveis de esforço, "rode barato e refaça", onde o barato ganha
   build/indice.py         gera o índice a partir do dump
+  guia/index.html         landing + guia (GitHub Pages) · capa/capa.png capa do catálogo
   doc/                    material-fonte LOCAL (ignorado no git — ver abaixo)
 ```
 
