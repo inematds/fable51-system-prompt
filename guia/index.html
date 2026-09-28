@@ -1,13 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Fable 5.1 — Prompt de Sistema · análise, índice e fichas</title>
-<meta name="description" content="Projeto de referência sobre o prompt de sistema do Claude Fable 5.1: o que a Anthropic publica, o que aparece no dump do runtime, o que mudou em relação ao Fable 5 e fichas práticas para testar, escrever e gastar menos.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<meta content="Projeto de referência sobre o prompt de sistema do Claude Fable 5.1: o que a Anthropic publica, o que aparece no dump do runtime, o que mudou em relação ao Fable 5 e fichas práticas para testar, escrever e gastar menos." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
 <style>
   :root{
     --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
@@ -90,166 +91,151 @@
   footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
   .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
 </style>
-</head>
-<body>
-
+<link href="https://inematds.github.io/fable51-system-prompt/guia/" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/fable51-system-prompt/guia/en/" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/fable51-system-prompt/guia/es/" hreflang="es" rel="alternate"/></head>
+<body><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="./" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">PT</a><a href="en/" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="es/" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
 <nav><div class="wrap">
-  <a class="brand" href="#top"><span class="emoji">🧾</span> Fable 5.1 · Prompt de Sistema</a>
-  <span class="sep">|</span>
-  <span class="clubpro">
-    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
-    <span class="sep">-</span>
-    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
-  </span>
-  <div class="links">
-    <a class="sec" href="#oque">O que é</a>
-    <a class="sec" href="#fluxo">Como funciona</a>
-    <a class="sec" href="#guia">Guia de uso</a>
-    <a class="sec" href="#exemplos">Números</a>
-    <a class="sec" href="#roadmap">Roadmap</a>
-    <button class="tgl" id="themeToggle" aria-label="Alternar tema" title="Alternar tema">🌙</button>
-    <a class="btn" href="https://github.com/inematds/fable51-system-prompt" target="_blank" rel="noopener">GitHub</a>
-  </div>
+<a class="brand" href="#top"><span class="emoji">🧾</span> Fable 5.1 · Prompt de Sistema</a>
+<span class="sep">|</span>
+<span class="clubpro">
+<a class="inema" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+<span class="sep">-</span>
+<a class="pro" href="https://inema.pro" rel="noopener" target="_blank">PRO</a>
+</span>
+<div class="links">
+<a class="sec" href="#oque">O que é</a>
+<a class="sec" href="#fluxo">Como funciona</a>
+<a class="sec" href="#guia">Guia de uso</a>
+<a class="sec" href="#exemplos">Números</a>
+<a class="sec" href="#roadmap">Roadmap</a>
+<button aria-label="Alternar tema" class="tgl" id="themeToggle" title="Alternar tema">🌙</button>
+<a class="btn" href="https://github.com/inematds/fable51-system-prompt" rel="noopener" target="_blank">GitHub</a>
+</div>
 </div></nav>
-
 <header class="hero" id="top">
-  <div class="glow"></div>
-  <div class="wrap">
-    <div>
-      <span class="chip">Referência · dump congelado em 02/09/2026</span>
-      <h1>O que o Claude lê <span class="amb">antes</span> de você</h1>
-      <p class="lead">Análise, índice e fichas práticas sobre o prompt de sistema do Claude Fable 5.1: o que é oficial, o que é extração, o que mudou e como usar isso a seu favor.</p>
-      <div class="cta">
-        <a class="btn" href="#guia">Começar o guia</a>
-        <a class="btn ghost" href="https://github.com/inematds/fable51-system-prompt" target="_blank" rel="noopener">Ver no GitHub</a>
-      </div>
-    </div>
-    <figure><img src="assets/hero.jpg" alt="Ilustração abstrata em âmbar e preto representando camadas de instruções entre o usuário e o modelo"></figure>
-  </div>
+<div class="glow"></div>
+<div class="wrap">
+<div>
+<span class="chip">Referência · dump congelado em 02/09/2026</span>
+<h1>O que o Claude lê <span class="amb">antes</span> de você</h1>
+<p class="lead">Análise, índice e fichas práticas sobre o prompt de sistema do Claude Fable 5.1: o que é oficial, o que é extração, o que mudou e como usar isso a seu favor.</p>
+<div class="cta">
+<a class="btn" href="#guia">Começar o guia</a>
+<a class="btn ghost" href="https://github.com/inematds/fable51-system-prompt" rel="noopener" target="_blank">Ver no GitHub</a>
+</div>
+</div>
+<figure><img alt="Ilustração abstrata em âmbar e preto representando camadas de instruções entre o usuário e o modelo" src="assets/hero.jpg"/></figure>
+</div>
 </header>
-
 <section id="oque"><div class="wrap">
-  <span class="chip">O que é</span>
-  <h2>Um projeto de referência, separado do curso</h2>
-  <p class="sub">Tudo que embasa o curso "Fable 5.1 na prática", organizado para consulta direta: fontes com seus pesos, análise do que mudou e fichas prontas para copiar. Moldura em tudo: <strong>oficial × extraído</strong> e <strong>modelo × produto ao redor</strong>.</p>
-  <div class="grid g3">
-    <div class="card"><h3>🏛️ Duas fontes, dois pesos</h3><p>O prompt central que a Anthropic publica e assina, e o dump do runtime do Claude.ai (memória, busca, artefatos, 46 ferramentas) que a Anthropic não autenticou. O README diz qual é qual.</p></div>
-    <div class="card"><h3>🗺️ Índice do dump</h3><p>Mapa gerado por script das 40 seções do arquivo, com linhas, tamanho e grupo. Só metadados: você sabe onde está cada coisa sem redistribuir o conteúdo.</p></div>
-    <div class="card"><h3>📋 Fichas práticas</h3><p>Ficha dos 5 testes do comprador, regras para escrever para o Fable (tirar o andaime, dizer o quando) e tabela de custo e esforço. Markdown puro, para copiar.</p></div>
-  </div>
+<span class="chip">O que é</span>
+<h2>Um projeto de referência, separado do curso</h2>
+<p class="sub">Tudo que embasa o curso "Fable 5.1 na prática", organizado para consulta direta: fontes com seus pesos, análise do que mudou e fichas prontas para copiar. Moldura em tudo: <strong>oficial × extraído</strong> e <strong>modelo × produto ao redor</strong>.</p>
+<div class="grid g3">
+<div class="card"><h3>🏛️ Duas fontes, dois pesos</h3><p>O prompt central que a Anthropic publica e assina, e o dump do runtime do Claude.ai (memória, busca, artefatos, 46 ferramentas) que a Anthropic não autenticou. O README diz qual é qual.</p></div>
+<div class="card"><h3>🗺️ Índice do dump</h3><p>Mapa gerado por script das 40 seções do arquivo, com linhas, tamanho e grupo. Só metadados: você sabe onde está cada coisa sem redistribuir o conteúdo.</p></div>
+<div class="card"><h3>📋 Fichas práticas</h3><p>Ficha dos 5 testes do comprador, regras para escrever para o Fable (tirar o andaime, dizer o quando) e tabela de custo e esforço. Markdown puro, para copiar.</p></div>
+</div>
 </div></section>
-
 <section id="fluxo"><div class="wrap">
-  <span class="chip">Como funciona</span>
-  <h2>Da fonte bruta à ficha que você usa</h2>
-  <p class="sub">O material-fonte fica local (é de terceiros ou extração não autenticada). O que se publica é o derivado: índice, análise e fichas.</p>
-  <div class="flow">
-    <span>doc/ (dump + Field Guide)</span><span class="arr">→</span>
-    <span>build/indice.py</span><span class="arr">→</span>
-    <span>INDICE-DO-DUMP.md</span><span class="arr">→</span>
-    <span>ANALISE.md</span><span class="arr">→</span>
-    <span>fichas/01 · 02 · 03</span>
-  </div>
-  <div class="grid g3" style="margin-top:22px">
-    <div class="card"><span class="num">1</span><h3>Prompt central (oficial)</h3><p>Identidade, tom, recusas, bem-estar, data de corte. Linhas 2–188 do dump batem com o que a Anthropic publica.</p></div>
-    <div class="card"><span class="num">2</span><h3>Camada de produto (só no dump)</h3><p>Memória (836 linhas, 38% do arquivo), conversas passadas, visuais, plugins e skills, busca, artefatos. É aqui que o 5.1 cresceu 2,3x.</p></div>
-    <div class="card"><span class="num">3</span><h3>Derivados (publicados)</h3><p>Índice, análise e fichas. Datados. O produto muda; o método de reauditar a cada geração fica.</p></div>
-  </div>
+<span class="chip">Como funciona</span>
+<h2>Da fonte bruta à ficha que você usa</h2>
+<p class="sub">O material-fonte fica local (é de terceiros ou extração não autenticada). O que se publica é o derivado: índice, análise e fichas.</p>
+<div class="flow">
+<span>doc/ (dump + Field Guide)</span><span class="arr">→</span>
+<span>build/indice.py</span><span class="arr">→</span>
+<span>INDICE-DO-DUMP.md</span><span class="arr">→</span>
+<span>ANALISE.md</span><span class="arr">→</span>
+<span>fichas/01 · 02 · 03</span>
+</div>
+<div class="grid g3" style="margin-top:22px">
+<div class="card"><span class="num">1</span><h3>Prompt central (oficial)</h3><p>Identidade, tom, recusas, bem-estar, data de corte. Linhas 2–188 do dump batem com o que a Anthropic publica.</p></div>
+<div class="card"><span class="num">2</span><h3>Camada de produto (só no dump)</h3><p>Memória (836 linhas, 38% do arquivo), conversas passadas, visuais, plugins e skills, busca, artefatos. É aqui que o 5.1 cresceu 2,3x.</p></div>
+<div class="card"><span class="num">3</span><h3>Derivados (publicados)</h3><p>Índice, análise e fichas. Datados. O produto muda; o método de reauditar a cada geração fica.</p></div>
+</div>
 </div></section>
-
 <section id="pre"><div class="wrap">
-  <span class="chip">Pré-requisitos</span>
-  <h2>Quase nada: é leitura e cópia</h2>
-  <p class="sub">Para ler as fichas, basta o navegador. Para regenerar o índice, Python 3 e o dump local.</p>
-  <div class="grid g3">
-    <div class="card"><h3>Clonar o repositório</h3><p>Os arquivos derivados vêm no clone. A pasta <code>doc/</code> não vem.</p><pre><span class="c"># clone</span>
+<span class="chip">Pré-requisitos</span>
+<h2>Quase nada: é leitura e cópia</h2>
+<p class="sub">Para ler as fichas, basta o navegador. Para regenerar o índice, Python 3 e o dump local.</p>
+<div class="grid g3">
+<div class="card"><h3>Clonar o repositório</h3><p>Os arquivos derivados vêm no clone. A pasta <code>doc/</code> não vem.</p><pre><span class="c"># clone</span>
 <span class="k">git clone</span> <span class="s">git@github.com:inematds/fable51-system-prompt.git</span>
 <span class="k">cd</span> fable51-system-prompt</pre></div>
-    <div class="card"><h3>Dump local (opcional)</h3><p>Só para regenerar o índice. O arquivo original está público no repositório CL4R1T4S, pasta ANTHROPIC.</p><pre><span class="c"># salve como doc/Claude-Fable-5.1.md</span>
+<div class="card"><h3>Dump local (opcional)</h3><p>Só para regenerar o índice. O arquivo original está público no repositório CL4R1T4S, pasta ANTHROPIC.</p><pre><span class="c"># salve como doc/Claude-Fable-5.1.md</span>
 <span class="k">mkdir -p</span> doc
 <span class="c"># md5 esperado: be4cb3a5103be5c1c581afac2a04b1d0</span></pre></div>
-    <div class="card"><h3>Python 3</h3><p>Sem dependências externas.</p><pre><span class="k">python3</span> --version</pre></div>
-  </div>
+<div class="card"><h3>Python 3</h3><p>Sem dependências externas.</p><pre><span class="k">python3</span> --version</pre></div>
+</div>
 </div></section>
-
 <section id="guia"><div class="wrap">
-  <span class="chip">Guia de uso · passo a passo</span>
-  <h2>Cinco usos, do mais rápido ao mais profundo</h2>
-  <p class="sub">Escolha pelo que você quer fazer hoje. Cada passo aponta para um arquivo do repositório.</p>
-
-  <div class="step"><div class="b">1</div><div>
-    <h3>Entenda o que mudou em 5 minutos</h3>
-    <p>Abra a análise: os três números (2,3x · +28 ferramentas · 75% memória+schemas), as 28 adições em 6 grupos, as regras de comportamento novas e o paradoxo modelo × produto.</p>
+<span class="chip">Guia de uso · passo a passo</span>
+<h2>Cinco usos, do mais rápido ao mais profundo</h2>
+<p class="sub">Escolha pelo que você quer fazer hoje. Cada passo aponta para um arquivo do repositório.</p>
+<div class="step"><div class="b">1</div><div>
+<h3>Entenda o que mudou em 5 minutos</h3>
+<p>Abra a análise: os três números (2,3x · +28 ferramentas · 75% memória+schemas), as 28 adições em 6 grupos, as regras de comportamento novas e o paradoxo modelo × produto.</p>
 <pre><span class="k">cat</span> ANALISE.md  <span class="c"># ou leia no GitHub</span></pre>
-  </div></div>
-
-  <div class="step"><div class="b">2</div><div>
-    <h3>Ache onde uma regra mora no prompt</h3>
-    <p>O índice lista as 40 seções com linhas e tamanho, as ferramentas achadas por schema e as 11 skills, mais uma ordem de leitura sugerida (tom → memória → conversas → visuais → busca → ferramentas).</p>
+</div></div>
+<div class="step"><div class="b">2</div><div>
+<h3>Ache onde uma regra mora no prompt</h3>
+<p>O índice lista as 40 seções com linhas e tamanho, as ferramentas achadas por schema e as 11 skills, mais uma ordem de leitura sugerida (tom → memória → conversas → visuais → busca → ferramentas).</p>
 <pre><span class="k">cat</span> INDICE-DO-DUMP.md
 <span class="c"># com o dump local, regenerar:</span>
 <span class="k">python3</span> build/indice.py  <span class="c"># 40 seções · 31 ferramentas por "name" · 11 skills</span></pre>
-  </div></div>
-
-  <div class="step"><div class="b">3</div><div>
-    <h3>Teste na sua conta se as novidades aparecem</h3>
-    <p>Copie a ficha, preencha superfície, plano e data, e rode os 5 testes: continuidade (memória), registro (conversas passadas), interface (visuais), capacidade (skills/plugins) e controle (apagar memória). Resultado sem ficha é impressão; com ficha é dado.</p>
+</div></div>
+<div class="step"><div class="b">3</div><div>
+<h3>Teste na sua conta se as novidades aparecem</h3>
+<p>Copie a ficha, preencha superfície, plano e data, e rode os 5 testes: continuidade (memória), registro (conversas passadas), interface (visuais), capacidade (skills/plugins) e controle (apagar memória). Resultado sem ficha é impressão; com ficha é dado.</p>
 <pre><span class="k">cat</span> fichas/01-ficha-dos-5-testes.md
 <span class="c"># exemplo de prompt do Teste 2 (registro):</span>
 <span class="s">Sobre aquela decisão que tomamos sobre [tema]: qual foi a opção que escolhemos e por quê?</span></pre>
-  </div></div>
-
-  <div class="step"><div class="b">4</div><div>
-    <h3>Reescreva seus prompts para a nova geração</h3>
-    <p>Tire o andaime ("seja conciso", "pense passo a passo" já estão no prompt de sistema), diga <em>quando</em> usar cada capacidade, mostre o formato em vez de proibir, e use o esqueleto de set/2026 (resultado, fonte de verdade, autoridade, pronto, verificação).</p>
+</div></div>
+<div class="step"><div class="b">4</div><div>
+<h3>Reescreva seus prompts para a nova geração</h3>
+<p>Tire o andaime ("seja conciso", "pense passo a passo" já estão no prompt de sistema), diga <em>quando</em> usar cada capacidade, mostre o formato em vez de proibir, e use o esqueleto de set/2026 (resultado, fonte de verdade, autoridade, pronto, verificação).</p>
 <pre><span class="k">cat</span> fichas/02-escrever-para-o-fable.md
 <span class="c"># regra de bolso: cada linha do prompt deve conter informação que o modelo não tem</span></pre>
-  </div></div>
-
-  <div class="step"><div class="b">5</div><div>
-    <h3>Decida modelo e esforço pelo custo por tarefa</h3>
-    <p>Por token o Fable custa 2x o Opus 5 e 5x o Sonnet 5. A economia só existe medida por tarefa concluída: varra o esforço antes de descer de modelo, rode barato e refaça só o que falhou (se houver checador), compare na décima parte mais difícil do seu trabalho.</p>
+</div></div>
+<div class="step"><div class="b">5</div><div>
+<h3>Decida modelo e esforço pelo custo por tarefa</h3>
+<p>Por token o Fable custa 2x o Opus 5 e 5x o Sonnet 5. A economia só existe medida por tarefa concluída: varra o esforço antes de descer de modelo, rode barato e refaça só o que falhou (se houver checador), compare na décima parte mais difícil do seu trabalho.</p>
 <pre><span class="k">cat</span> fichas/03-custo-e-esforco.md
 <span class="c"># ordem das alavancas na API: cache → esforço → orçamento → modelo, uma por vez, medindo</span></pre>
-  </div></div>
+</div></div>
 </div></section>
-
 <section id="exemplos"><div class="wrap">
-  <span class="chip">Os números</span>
-  <h2>Fable 5 → Fable 5.1, no mesmo método de contagem</h2>
-  <p class="sub">Medidos pelo Field Guide sobre dois dumps não autenticados, congelados em 02/09/2026. Benchmarks são os que a Anthropic escolheu publicar.</p>
-  <div class="grid g4">
-    <div class="card"><h3 class="amb" style="font-size:2rem">2,3x</h3><p>palavras no prompt capturado: 17.501 → 40.046</p></div>
-    <div class="card"><h3 class="amb" style="font-size:2rem">+28</h3><p>ferramentas adicionadas (46 no total, nenhuma removida)</p></div>
-    <div class="card"><h3 class="amb" style="font-size:2rem">75%</h3><p>do crescimento é memória (+8.639 palavras) e schemas (+8.328)</p></div>
-    <div class="card"><h3 class="amb" style="font-size:2rem">38%</h3><p>do dump atual é só a seção <code>memory_filesystem</code> (836 de 2.196 linhas)</p></div>
-  </div>
-  <div class="grid g3" style="margin-top:16px">
-    <div class="card"><h3>🧠 Memória (6)</h3><p>list / read / write / append / str_replace / delete. Nunca guarda saúde, religião, orientação, pagamento. Só entra na resposta se mudar a substância.</p></div>
-    <div class="card"><h3>🗂️ Conversas passadas (3)</h3><p>conversation_search, recent_chats, read_conversation. Reabre a conversa original por pistas como "aquela decisão".</p></div>
-    <div class="card"><h3>📊 Visuais (13) · 🔌 Plugins e skills (4) · 🔎 Pesquisa (1) · ⏹ Controle (1)</h3><p>Resposta vira interface; sugestão de capacidade faltante (1 cartão por conversa); pesquisa profunda sob decisão; parada só para segurança.</p></div>
-  </div>
+<span class="chip">Os números</span>
+<h2>Fable 5 → Fable 5.1, no mesmo método de contagem</h2>
+<p class="sub">Medidos pelo Field Guide sobre dois dumps não autenticados, congelados em 02/09/2026. Benchmarks são os que a Anthropic escolheu publicar.</p>
+<div class="grid g4">
+<div class="card"><h3 class="amb" style="font-size:2rem">2,3x</h3><p>palavras no prompt capturado: 17.501 → 40.046</p></div>
+<div class="card"><h3 class="amb" style="font-size:2rem">+28</h3><p>ferramentas adicionadas (46 no total, nenhuma removida)</p></div>
+<div class="card"><h3 class="amb" style="font-size:2rem">75%</h3><p>do crescimento é memória (+8.639 palavras) e schemas (+8.328)</p></div>
+<div class="card"><h3 class="amb" style="font-size:2rem">38%</h3><p>do dump atual é só a seção <code>memory_filesystem</code> (836 de 2.196 linhas)</p></div>
+</div>
+<div class="grid g3" style="margin-top:16px">
+<div class="card"><h3>🧠 Memória (6)</h3><p>list / read / write / append / str_replace / delete. Nunca guarda saúde, religião, orientação, pagamento. Só entra na resposta se mudar a substância.</p></div>
+<div class="card"><h3>🗂️ Conversas passadas (3)</h3><p>conversation_search, recent_chats, read_conversation. Reabre a conversa original por pistas como "aquela decisão".</p></div>
+<div class="card"><h3>📊 Visuais (13) · 🔌 Plugins e skills (4) · 🔎 Pesquisa (1) · ⏹ Controle (1)</h3><p>Resposta vira interface; sugestão de capacidade faltante (1 cartão por conversa); pesquisa profunda sob decisão; parada só para segurança.</p></div>
+</div>
 </div></section>
-
 <section id="roadmap"><div class="wrap">
-  <span class="chip">Roadmap</span>
-  <h2>O que existe e o que vem</h2>
-  <p class="sub">Tudo datado. A próxima geração de modelo reabre a auditoria.</p>
-  <div class="phase"><div class="tag">Feito</div><div class="d"><strong>Fontes, análise, índice e três fichas</strong><span>Dump e Field Guide locais (md5 conferido), ANALISE.md, INDICE-DO-DUMP.md gerado por script, fichas de testes, escrita e custo. Publicado em 06/09/2026.</span></div></div>
-  <div class="phase"><div class="tag">Ligado</div><div class="d"><strong>Curso "Fable 5.1 na prática"</strong><span>3 trilhas, 9 módulos, 54 tópicos, no repositório separado <a href="https://inematds.github.io/fable51-system/" target="_blank" rel="noopener">fable51-system</a>. O Dia 4 de <a href="https://inematds.github.io/arquitetura-de-intencao/dia-4.html" target="_blank" rel="noopener">Arquitetura de Intenção</a> trata a virada de set/2026.</span></div></div>
-  <div class="phase"><div class="tag">Próximo</div><div class="d"><strong>Diff automático entre versões do prompt</strong><span>Rodar o índice sobre dois dumps e emitir as seções que cresceram, sumiram ou apareceram, para reauditar a cada lançamento.</span></div></div>
-  <div class="phase"><div class="tag">Depois</div><div class="d"><strong>Fichas preenchidas por superfície e plano</strong><span>Coletar fichas dos 5 testes de alunos (web, celular, Claude Code; free, pro, max) e publicar o que apareceu onde.</span></div></div>
+<span class="chip">Roadmap</span>
+<h2>O que existe e o que vem</h2>
+<p class="sub">Tudo datado. A próxima geração de modelo reabre a auditoria.</p>
+<div class="phase"><div class="tag">Feito</div><div class="d"><strong>Fontes, análise, índice e três fichas</strong><span>Dump e Field Guide locais (md5 conferido), ANALISE.md, INDICE-DO-DUMP.md gerado por script, fichas de testes, escrita e custo. Publicado em 06/09/2026.</span></div></div>
+<div class="phase"><div class="tag">Ligado</div><div class="d"><strong>Curso "Fable 5.1 na prática"</strong><span>3 trilhas, 9 módulos, 54 tópicos, no repositório separado <a href="https://inematds.github.io/fable51-system/" rel="noopener" target="_blank">fable51-system</a>. O Dia 4 de <a href="https://inematds.github.io/arquitetura-de-intencao/dia-4.html" rel="noopener" target="_blank">Arquitetura de Intenção</a> trata a virada de set/2026.</span></div></div>
+<div class="phase"><div class="tag">Próximo</div><div class="d"><strong>Diff automático entre versões do prompt</strong><span>Rodar o índice sobre dois dumps e emitir as seções que cresceram, sumiram ou apareceram, para reauditar a cada lançamento.</span></div></div>
+<div class="phase"><div class="tag">Depois</div><div class="d"><strong>Fichas preenchidas por superfície e plano</strong><span>Coletar fichas dos 5 testes de alunos (web, celular, Claude Code; free, pro, max) e publicar o que apareceu onde.</span></div></div>
 </div></section>
-
 <footer>
-  <div class="wrap">
-    <div class="pill">Markdown</div><div class="pill">Python 3</div><div class="pill">GitHub Pages</div>
-    <p style="margin-top:18px">Fable 5.1 · Prompt de Sistema · dump de 02/09/2026, análise de 05/09/2026 ·
+<div class="wrap">
+<div class="pill">Markdown</div><div class="pill">Python 3</div><div class="pill">GitHub Pages</div>
+<p style="margin-top:18px">Fable 5.1 · Prompt de Sistema · dump de 02/09/2026, análise de 05/09/2026 ·
       <a href="https://github.com/inematds/fable51-system-prompt">inematds/fable51-system-prompt</a> ·
       <a href="https://inema.club">INEMA.CLUB</a></p>
-  </div>
+</div>
 </footer>
-
 <script>
   (function(){
     var KEY='fable51-system-prompt-theme'; // troque fable51-system-prompt pelo nome do projeto

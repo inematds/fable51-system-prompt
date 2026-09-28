@@ -1,5 +1,7 @@
 # Fable 5.1 — prompt de sistema (projeto de referência)
 
+**🇧🇷 [Português](README.md) · 🇺🇸 [English](README.en.md) · 🇪🇸 [Español](README.es.md)**
+
 ## 📖 Guia de uso
 
 Guia completo (landing + passo a passo): **https://inematds.github.io/fable51-system-prompt/guia/**

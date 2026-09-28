@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Fable 5.1 — Prompt del sistema · análisis, índice y fichas</title>
+<meta content="Proyecto de referencia sobre el prompt del sistema de Claude Fable 5.1: lo que publica Anthropic, lo que aparece en el dump del runtime, qué cambió respecto de Fable 5 y fichas prácticas para probar, escribir y gastar menos." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#E2A23B; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#b9791d; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:760px){nav .links a.sec{display:none}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(226,162,59,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;display:block}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(226,162,59,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px 1fr;gap:16px;margin-bottom:26px}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+<link href="https://inematds.github.io/fable51-system-prompt/guia/" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/fable51-system-prompt/guia/en/" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/fable51-system-prompt/guia/es/" hreflang="es" rel="alternate"/></head>
+<body><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="../en/" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="./" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">ES</a></div>
+<nav><div class="wrap">
+<a class="brand" href="#top"><span class="emoji">🧾</span> Fable 5.1 · Prompt del sistema</a>
+<span class="sep">|</span>
+<span class="clubpro">
+<a class="inema" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+<span class="sep">-</span>
+<a class="pro" href="https://inema.pro" rel="noopener" target="_blank">PRO</a>
+</span>
+<div class="links">
+<a class="sec" href="#oque">Qué es</a>
+<a class="sec" href="#fluxo">Cómo funciona</a>
+<a class="sec" href="#guia">Guía de uso</a>
+<a class="sec" href="#exemplos">Números</a>
+<a class="sec" href="#roadmap">Roadmap</a>
+<button aria-label="Cambiar tema" class="tgl" id="themeToggle" title="Cambiar tema">🌙</button>
+<a class="btn" href="https://github.com/inematds/fable51-system-prompt" rel="noopener" target="_blank">GitHub</a>
+</div>
+</div></nav>
+<header class="hero" id="top">
+<div class="glow"></div>
+<div class="wrap">
+<div>
+<span class="chip">Referencia · dump congelado el 02/09/2026</span>
+<h1>Qué lee Claude <span class="amb">antes</span> de ti</h1>
+<p class="lead">Análisis, índice y fichas prácticas sobre el prompt del sistema de Claude Fable 5.1: qué es oficial, qué es una extracción, qué cambió y cómo aprovecharlo.</p>
+<div class="cta">
+<a class="btn" href="#guia">Empezar la guía</a>
+<a class="btn ghost" href="https://github.com/inematds/fable51-system-prompt" rel="noopener" target="_blank">Ver en GitHub</a>
+</div>
+</div>
+<figure><img alt="Ilustración abstracta en ámbar y negro que representa capas de instrucciones entre el usuario y el modelo" src="../assets/hero.jpg"/></figure>
+</div>
+</header>
+<section id="oque"><div class="wrap">
+<span class="chip">Qué es</span>
+<h2>Un proyecto de referencia, separado del curso</h2>
+<p class="sub">Todo lo que sirve de base para el curso "Fable 5.1 na prática", organizado para consulta directa: fuentes con su ponderación, análisis de lo que cambió y fichas listas para copiar. Todo enmarcado por: <strong>oficial × extraído</strong> e <strong>modelo × producto que lo rodea</strong>.</p>
+<div class="grid g3">
+<div class="card"><h3>🏛️ Dos fuentes, dos pesos</h3><p>El prompt central que Anthropic publica y firma, y el dump del runtime de Claude.ai (memoria, búsqueda, artefactos, 46 herramientas) que Anthropic no autenticó. El README indica cuál es cuál.</p></div>
+<div class="card"><h3>🗺️ Índice del dump</h3><p>Mapa de las 40 secciones del archivo generado por script, con líneas, tamaño y grupo. Solo metadatos: sabes dónde está cada cosa sin redistribuir el contenido.</p></div>
+<div class="card"><h3>📋 Fichas prácticas</h3><p>Ficha de las 5 pruebas del comprador, reglas para escribirle a Fable (quitar el andamiaje, indicar cuándo) y tabla de costo y esfuerzo. Markdown puro, para copiar.</p></div>
+</div>
+</div></section>
+<section id="fluxo"><div class="wrap">
+<span class="chip">Cómo funciona</span>
+<h2>De la fuente original a la ficha que usas</h2>
+<p class="sub">El material fuente queda en local (es de terceros o una extracción no autenticada). Lo que se publica es lo derivado: índice, análisis y fichas.</p>
+<div class="flow">
+<span>doc/ (dump + Field Guide)</span><span class="arr">→</span>
+<span>build/indice.py</span><span class="arr">→</span>
+<span>INDICE-DO-DUMP.md</span><span class="arr">→</span>
+<span>ANALISE.md</span><span class="arr">→</span>
+<span>fichas/01 · 02 · 03</span>
+</div>
+<div class="grid g3" style="margin-top:22px">
+<div class="card"><span class="num">1</span><h3>Prompt central (oficial)</h3><p>Identidad, tono, negativas, bienestar, fecha de corte. Las líneas 2–188 del dump coinciden con lo que publica Anthropic.</p></div>
+<div class="card"><span class="num">2</span><h3>Capa de producto (solo en el dump)</h3><p>Memoria (836 líneas, 38% del archivo), conversaciones pasadas, elementos visuales, plugins y skills, búsqueda, artefactos. Aquí creció 2,3x el 5.1.</p></div>
+<div class="card"><span class="num">3</span><h3>Derivados (publicados)</h3><p>Índice, análisis y fichas. Con fecha. El producto cambia; el método para volver a auditar cada generación permanece.</p></div>
+</div>
+</div></section>
+<section id="pre"><div class="wrap">
+<span class="chip">Requisitos previos</span>
+<h2>Casi nada: es lectura y copia</h2>
+<p class="sub">Para leer las fichas, basta con el navegador. Para regenerar el índice, Python 3 y el dump local.</p>
+<div class="grid g3">
+<div class="card"><h3>Clonar el repositorio</h3><p>Los archivos derivados vienen en el clone. La carpeta <code>doc/</code> no viene.</p><pre><span class="c"># clon</span>
+<span class="k">git clone</span> <span class="s">git@github.com:inematds/fable51-system-prompt.git</span>
+<span class="k">cd</span> fable51-system-prompt</pre></div>
+<div class="card"><h3>Dump local (opcional)</h3><p>Solo para regenerar el índice. El archivo original es público en el repositorio CL4R1T4S, carpeta ANTHROPIC.</p><pre><span class="c"># guarda como doc/Claude-Fable-5.1.md</span>
+<span class="k">mkdir -p</span> doc
+<span class="c"># md5 esperado: be4cb3a5103be5c1c581afac2a04b1d0</span></pre></div>
+<div class="card"><h3>Python 3</h3><p>Sin dependencias externas.</p><pre><span class="k">python3</span> --version</pre></div>
+</div>
+</div></section>
+<section id="guia"><div class="wrap">
+<span class="chip">Guía de uso · paso a paso</span>
+<h2>Cinco usos, del más rápido al más profundo</h2>
+<p class="sub">Elige según lo que quieras hacer hoy. Cada paso apunta a un archivo del repositorio.</p>
+<div class="step"><div class="b">1</div><div>
+<h3>Entiende qué cambió en 5 minutos</h3>
+<p>Abre el análisis: los tres números (2,3x · +28 herramientas · 75% memoria+schemas), las 28 adiciones en 6 grupos, las nuevas reglas de comportamiento y la paradoja modelo × producto.</p>
+<pre><span class="k">cat</span> ANALISE.md  <span class="c"># o léelo en GitHub</span></pre>
+</div></div>
+<div class="step"><div class="b">2</div><div>
+<h3>Encuentra dónde está una regla en el prompt</h3>
+<p>El índice enumera las 40 secciones con líneas y tamaño, las herramientas encontradas por schema y las 11 skills, además de un orden de lectura sugerido (tono → memoria → conversaciones → elementos visuales → búsqueda → herramientas).</p>
+<pre><span class="k">cat</span> INDICE-DO-DUMP.md
+<span class="c"># con el dump local, regenerar:</span>
+<span class="k">python3</span> build/indice.py  <span class="c"># 40 secciones · 31 herramientas por "name" · 11 skills</span></pre>
+</div></div>
+<div class="step"><div class="b">3</div><div>
+<h3>Prueba en tu cuenta si aparecen las novedades</h3>
+<p>Copia la ficha, completa la superficie, el plan y la fecha, y realiza las 5 pruebas: continuidad (memoria), registro (conversaciones pasadas), interfaz (elementos visuales), capacidad (skills/plugins) y control (borrar memoria). Un resultado sin ficha es una impresión; con ficha, es un dato.</p>
+<pre><span class="k">cat</span> fichas/01-ficha-dos-5-testes.md
+<span class="c"># ejemplo de prompt de la Prueba 2 (registro):</span>
+<span class="s">Sobre aquela decisão que tomamos sobre [tema]: qual foi a opção que escolhemos e por quê?</span></pre>
+</div></div>
+<div class="step"><div class="b">4</div><div>
+<h3>Reescribe tus prompts para la nueva generación</h3>
+<p>Quita el andamiaje ("sé conciso", "piensa paso a paso" ya están en el prompt del sistema), di <em>cuando</em> usa cada capacidad, muestra el formato en vez de prohibir y usa el esqueleto de sep/2026 (resultado, fuente de verdad, autoridad, listo, verificación).</p>
+<pre><span class="k">cat</span> fichas/02-escrever-para-o-fable.md
+<span class="c"># regla práctica: cada línea del prompt debe contener información que el modelo no tiene</span></pre>
+</div></div>
+<div class="step"><div class="b">5</div><div>
+<h3>Decide el modelo y el esfuerzo según el costo por tarea</h3>
+<p>Por token, Fable cuesta 2x Opus 5 y 5x Sonnet 5. El ahorro solo existe si se mide por tarea completada: explora el esfuerzo antes de bajar de modelo, ejecuta la opción económica y repite solo lo que falló (si hay un verificador), compara en el 10% más difícil de tu trabajo.</p>
+<pre><span class="k">cat</span> fichas/03-custo-e-esforco.md
+<span class="c"># orden de las palancas en la API: caché → esfuerzo → presupuesto → modelo, una por vez, midiendo</span></pre>
+</div></div>
+</div></section>
+<section id="exemplos"><div class="wrap">
+<span class="chip">Las cifras</span>
+<h2>Fable 5 → Fable 5.1, con el mismo método de conteo</h2>
+<p class="sub">Medidos por el Field Guide a partir de dos dumps no autenticados, congelados el 02/09/2026. Los benchmarks son los que Anthropic decidió publicar.</p>
+<div class="grid g4">
+<div class="card"><h3 class="amb" style="font-size:2rem">2,3x</h3><p>palabras en el prompt capturado: 17.501 → 40.046</p></div>
+<div class="card"><h3 class="amb" style="font-size:2rem">+28</h3><p>herramientas agregadas (46 en total, ninguna eliminada)</p></div>
+<div class="card"><h3 class="amb" style="font-size:2rem">75%</h3><p>del crecimiento corresponde a la memoria (+8.639 palabras) y los schemas (+8.328)</p></div>
+<div class="card"><h3 class="amb" style="font-size:2rem">38%</h3><p>del dump actual es solo la sección <code>memory_filesystem</code> (836 de 2.196 líneas)</p></div>
+</div>
+<div class="grid g3" style="margin-top:16px">
+<div class="card"><h3>🧠 Memoria (6)</h3><p>list / read / write / append / str_replace / delete. Nunca guarda datos de salud, religión, orientación o pagos. Solo aparece en la respuesta si cambia la sustancia.</p></div>
+<div class="card"><h3>🗂️ Conversaciones anteriores (3)</h3><p>conversation_search, recent_chats, read_conversation. Reabre la conversación original con pistas como "aquella decisión".</p></div>
+<div class="card"><h3>📊 Visuales (13) · 🔌 Plugins y skills (4) · 🔎 Investigación (1) · ⏹ Control (1)</h3><p>La respuesta se convierte en interfaz; sugerencia de capacidad faltante (1 tarjeta por conversación); investigación profunda bajo decisión; detenerse solo por seguridad.</p></div>
+</div>
+</div></section>
+<section id="roadmap"><div class="wrap">
+<span class="chip">Roadmap</span>
+<h2>Qué existe y qué viene</h2>
+<p class="sub">Todo está fechado. La próxima generación del modelo reabre la auditoría.</p>
+<div class="phase"><div class="tag">Listo</div><div class="d"><strong>Fuentes, análisis, índice y tres fichas</strong><span>Dump y Field Guide locales (md5 verificado), ANALISE.md, INDICE-DO-DUMP.md generado por script, fichas de pruebas, escritura y costo. Publicado el 06/09/2026.</span></div></div>
+<div class="phase"><div class="tag">Activado</div><div class="d"><strong>Curso "Fable 5.1 en la práctica"</strong><span>3 rutas, 9 módulos, 54 temas, en el repositorio separado <a href="https://inematds.github.io/fable51-system/" rel="noopener" target="_blank">fable51-system</a>. El Día 4 de <a href="https://inematds.github.io/arquitetura-de-intencao/dia-4.html" rel="noopener" target="_blank">Arquitectura de intención</a> trata el cambio de sep/2026.</span></div></div>
+<div class="phase"><div class="tag">Siguiente</div><div class="d"><strong>Diferencias automáticas entre versiones del prompt</strong><span>Ejecutar el índice sobre dos dumps y mostrar las secciones que crecieron, desaparecieron o aparecieron, para volver a auditar con cada lanzamiento.</span></div></div>
+<div class="phase"><div class="tag">Después</div><div class="d"><strong>Fichas completadas por superficie y plan</strong><span>Recopilar fichas de las 5 pruebas de alumnos (web, celular, Claude Code; free, pro, max) y publicar qué apareció y dónde.</span></div></div>
+</div></section>
+<footer>
+<div class="wrap">
+<div class="pill">Markdown</div><div class="pill">Python 3</div><div class="pill">GitHub Pages</div>
+<p style="margin-top:18px">Fable 5.1 · Prompt del sistema · dump del 02/09/2026, análisis del 05/09/2026 ·
+      <a href="https://github.com/inematds/fable51-system-prompt">inematds/fable51-system-prompt</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+</div>
+</footer>
+<script>
+  (function(){
+    var KEY='fable51-system-prompt-theme'; // troque fable51-system-prompt pelo nome do projeto
+    var b=document.body, t=document.getElementById('themeToggle');
+    if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; }
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      localStorage.setItem(KEY, light?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>
